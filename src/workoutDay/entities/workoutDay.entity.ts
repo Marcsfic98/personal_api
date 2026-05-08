@@ -1,4 +1,12 @@
-import { IsBoolean, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import {
+    IsBoolean,
+    IsEnum,
+    IsInt,
+    IsNotEmpty,
+    IsString,
+    MaxLength,
+    Min,
+} from 'class-validator';
 import {
     Column,
     CreateDateColumn,
@@ -6,6 +14,16 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
+
+export enum WeekDay {
+  SEGUNDA = 'Segunda',
+  TERCA = 'Terça',
+  QUARTA = 'Quarta',
+  QUINTA = 'Quinta',
+  SEXTA = 'Sexta',
+  SABADO = 'Sábado',
+  DOMINGO = 'Domingo',
+}
 
 @Entity({ name: 'workout_day' })
 export class WorkoutDay {
@@ -22,25 +40,18 @@ export class WorkoutDay {
   @Column({ type: 'boolean', default: true })
   isRest: boolean;
 
-  @IsNotEmpty({ message: 'O Dia da Semana é obrigatório' })
-  @IsString()
+  @IsEnum(WeekDay, { message: 'Dia da semana inválido' })
   @Column({
     type: 'enum',
-    enum: [
-      'Segunda',
-      'Terça',
-      'Quarta',
-      'Quinta',
-      'Sexta',
-      'Sábado',
-      'Domingo',
-    ],
+    enum: WeekDay,
   })
-  weekDay: string;
+  weekDay: WeekDay;
 
+  @IsInt()
+  @Min(0)
   @IsNotEmpty({ message: 'A duração estimada é obrigatória' })
-  @Column({ type: 'int', nullable: false })
-  estimadedDuration: number;
+  @Column({ name: 'estimated_duration', type: 'int', nullable: false })
+  estimatedDuration: number;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
