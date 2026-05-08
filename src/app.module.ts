@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { WorkoutDay } from './workoutDay/entities/workoutDay.entity';
+import { WorkoutDayModule } from './workoutDay/workoutDay.module';
 import { WorkoutPlan } from './workoutPlan/entities/workoutPlan.entity';
 import { WorkoutPlanModule } from './workoutPlan/workoutPlan.module';
 
@@ -12,11 +14,12 @@ import { WorkoutPlanModule } from './workoutPlan/workoutPlan.module';
       username: 'root',
       password: 'root',
       database: 'db_personal',
-      entities: [WorkoutPlan],
+      entities: [WorkoutPlan, WorkoutDay],
       synchronize: true,
       logging: true,
     }),
     WorkoutPlanModule,
+    WorkoutDayModule,
   ],
   controllers: [],
   providers: [],

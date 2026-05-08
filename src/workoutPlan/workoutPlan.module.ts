@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { WorkoutPlanController } from './controller/workoutPlan.controller';
 import { WorkoutPlan } from './entities/workoutPlan.entity';
+import { WorkoutPlanService } from './service/workoutPlan.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([WorkoutPlan])],
-  providers: [],
-  controllers: [],
+  providers: [WorkoutPlanService],
+  controllers: [WorkoutPlanController],
 })
 export class WorkoutPlanModule {}
