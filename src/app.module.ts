@@ -1,3 +1,5 @@
+import { UserWorkoutSession } from './userWorkoutSession/entities/userWorkoutSession.entity';
+import { UserWorkoutSessionModule } from './userWorkoutSession/userWorkoutSession.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WorkoutDay } from './workoutDay/entities/workoutDay.entity';
@@ -16,13 +18,14 @@ import { WorkoutPlanModule } from './workoutPlan/workoutPlan.module';
       username: 'root',
       password: 'root',
       database: 'db_personal',
-      entities: [WorkoutPlan, WorkoutDay, WorkoutExercice],
+      entities: [WorkoutPlan, WorkoutDay, WorkoutExercice, UserWorkoutSession],
       synchronize: true,
       logging: true,
     }),
     WorkoutPlanModule,
     WorkoutDayModule,
     WorkoutExerciceModule,
+    UserWorkoutSessionModule,
   ],
   controllers: [],
   providers: [],
