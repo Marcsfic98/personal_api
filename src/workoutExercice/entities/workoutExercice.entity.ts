@@ -7,7 +7,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity('workout_exercices')
 export class WorkoutExercice {
   @PrimaryGeneratedColumn()
   id: number;

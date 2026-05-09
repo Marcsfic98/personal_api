@@ -26,7 +26,7 @@ export class WorkoutExerciceController {
     return await this.workoutExerciceService.findAll();
   }
 
-  @Get(':id')
+  @Get('/:id')
   @HttpCode(HttpStatus.OK)
   async findById(
     @Param('id', ParseIntPipe) id: number,
