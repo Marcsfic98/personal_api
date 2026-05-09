@@ -19,11 +19,11 @@ export class WorkoutPlanController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll() {
+  async findAll(): Promise<WorkoutPlan[]> {
     return await this.workoutPlanService.findAll();
   }
 
-  @Get(':id')
+  @Get('/:id')
   @HttpCode(HttpStatus.OK)
   async findById(@Param('id', ParseIntPipe) id: number): Promise<WorkoutPlan> {
     return await this.workoutPlanService.findById(id);

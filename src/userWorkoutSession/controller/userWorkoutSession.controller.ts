@@ -1,14 +1,14 @@
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  ParseIntPipe,
-  Post,
-  Put,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    HttpStatus,
+    Param,
+    ParseIntPipe,
+    Post,
+    Put,
 } from '@nestjs/common';
 import { UserWorkoutSession } from '../entities/userWorkoutSession.entity';
 import { UserWorkoutSessionService } from './../service/userWorkoutSession.service';
@@ -25,7 +25,7 @@ export class UserWorkoutSessionController {
     return await this.UserWorkoutSessionService.findAll();
   }
 
-  @Get(':id')
+  @Get('/:id')
   @HttpCode(HttpStatus.OK)
   async findById(
     @Param('id', ParseIntPipe) id: number,
