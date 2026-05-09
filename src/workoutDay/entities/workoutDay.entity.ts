@@ -11,9 +11,11 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
+import { WorkoutPlan } from '../../workoutPlan/entities/workoutPlan.entity';
 
 export enum WeekDay {
   SEGUNDA = 'Segunda',
@@ -58,4 +60,9 @@ export class WorkoutDay {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @ManyToOne(() => WorkoutPlan, (workoutPlan) => workoutPlan.workoutDays, {
+    onDelete: 'CASCADE',
+  })
+  workoutPlan: WorkoutPlan;
 }

@@ -3,9 +3,11 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
+import { WorkoutDay } from '../../workoutDay/entities/workoutDay.entity';
 
 @Entity({ name: 'workout_plans' })
 export class WorkoutPlan {
@@ -27,4 +29,9 @@ export class WorkoutPlan {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @OneToMany(() => WorkoutDay, (workoutDay) => workoutDay.workoutPlan, {
+    cascade: true,
+  })
+  workoutDays: WorkoutDay[];
 }
