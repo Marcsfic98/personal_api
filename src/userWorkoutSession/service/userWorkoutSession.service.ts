@@ -11,12 +11,15 @@ export class UserWorkoutSessionService {
   ) {}
 
   async findAll(): Promise<UserWorkoutSession[]> {
-    return await this.userWorkoutSessionRepository.find();
+    return await this.userWorkoutSessionRepository.find({
+      relations: ['user'],
+    });
   }
 
   async findById(id: number): Promise<UserWorkoutSession> {
     const UserWorkoutSession = await this.userWorkoutSessionRepository.findOne({
       where: { id },
+      relations: ['user'],
     });
     if (!UserWorkoutSession) {
       throw new Error('UserWorkoutSession not found');

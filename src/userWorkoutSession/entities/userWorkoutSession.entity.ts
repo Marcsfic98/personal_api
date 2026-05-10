@@ -1,3 +1,4 @@
+import { User } from './../../user/entities/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { WorkoutDay } from '../../workoutDay/entities/workoutDay.entity';
 
@@ -16,4 +17,9 @@ export class UserWorkoutSession {
     onDelete: 'CASCADE',
   })
   workoutDay: WorkoutDay;
+
+  @ManyToOne(() => User, (user) => user.userWorkoutSessions, {
+    onDelete: 'CASCADE',
+  })
+  user: User;
 }

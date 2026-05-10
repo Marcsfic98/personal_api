@@ -11,12 +11,15 @@ export class DietService {
   ) {}
 
   async findAll(): Promise<Diet[]> {
-    return await this.dietRepository.find();
+    return await this.dietRepository.find({
+      relations: ['user'], // Inclui a relação com o usuário
+    });
   }
 
   async findById(id: number): Promise<Diet> {
     const diet = await this.dietRepository.findOne({
       where: { id },
+      relations: ['user'], // Inclui a relação com o usuário
     });
     if (!diet) {
       throw new Error('Diet not found');
@@ -29,6 +32,7 @@ export class DietService {
       where: {
         name: ILike(`%${name}%`),
       },
+      relations: ['user'], // Inclui a relação com o usuário
     });
   }
 

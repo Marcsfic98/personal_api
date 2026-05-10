@@ -1,11 +1,13 @@
+import { User } from './../../user/entities/user.entity';
+import { ManyToOne } from 'typeorm';
 import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import {
-    Column,
-    CreateDateColumn,
-    Entity,
-    OneToMany,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn,
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Meal } from '../../meal/entities/meal.entity';
 
@@ -30,6 +32,9 @@ export class Diet {
   // Uma dieta tem várias refeições
   @OneToMany(() => Meal, (meal) => meal.diet, { cascade: true })
   meals: Meal[];
+
+  @ManyToOne(() => User, (user) => user.diet, { nullable: false })
+  user: User;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

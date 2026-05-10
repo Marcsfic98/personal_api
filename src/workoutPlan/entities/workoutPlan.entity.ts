@@ -1,11 +1,13 @@
+import { ManyToOne } from 'typeorm';
+import { User } from './../../user/entities/user.entity';
 import { IsBoolean, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import {
-    Column,
-    CreateDateColumn,
-    Entity,
-    OneToMany,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn,
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { WorkoutDay } from '../../workoutDay/entities/workoutDay.entity';
 
@@ -34,4 +36,7 @@ export class WorkoutPlan {
     cascade: true,
   })
   workoutDays: WorkoutDay[];
+
+  @ManyToOne(() => User, (user) => user.workoutPlans)
+  user: User;
 }

@@ -1,11 +1,15 @@
+import { UserWorkoutSession } from './../../userWorkoutSession/entities/userWorkoutSession.entity';
+import { Diet } from './../../diet/entities/diet.entity';
+import { WorkoutPlan } from './../../workoutPlan/entities/workoutPlan.entity';
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
 import {
-    Column,
-    CreateDateColumn,
-    Entity,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
+import { OneToMany } from 'typeorm';
 
 @Entity({ name: 'users' })
 export class User {
@@ -38,4 +42,19 @@ export class User {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @OneToMany(
+    () => UserWorkoutSession,
+    (userWorkoutSession) => userWorkoutSession.user,
+    { cascade: true },
+  )
+  userWorkoutSessions: UserWorkoutSession[];
+
+  @OneToMany(() => WorkoutPlan, (workoutPlan) => workoutPlan.user, {
+    cascade: true,
+  })
+  workoutPlans: WorkoutPlan[];
+
+  @OneToMany(() => Diet, (diet) => diet.user, { cascade: true })
+  diet: Diet[];
 }

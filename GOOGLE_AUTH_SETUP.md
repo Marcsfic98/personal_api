@@ -7,7 +7,7 @@ Foram implementados os seguintes componentes para autenticação com Google:
 1. **GoogleStrategy** - Estratégia OAuth 2.0 do Google
 2. **GoogleOAuthGuard** - Guard para proteger rotas do Google
 3. **Novos métodos no AuthService** - `googleLogin()` para processar usuários do Google
-4. **Novos métodos no UserService** - `createGoogleUser()` e `updateWithoutPassword()` 
+4. **Novos métodos no UserService** - `createGoogleUser()` e `updateWithoutPassword()`
 5. **Novos endpoints no AuthController** - Rotas para iniciar e completar o fluxo OAuth
 
 ## 🔧 Configuração
@@ -51,16 +51,21 @@ window.location.href = 'http://localhost:3000/users/auth/google';
 ### Endpoints Disponíveis
 
 #### 1. Iniciar Login com Google
+
 ```
 GET /users/auth/google
 ```
+
 Redireciona o usuário para a tela de login do Google.
 
 #### 2. Callback do Google (Automático)
+
 ```
 GET /users/auth/google/callback
 ```
+
 Processado automaticamente pelo Passport. Retorna:
+
 ```json
 {
   "id": 1,
@@ -103,6 +108,7 @@ Ambos retornam um JWT que pode ser usado normalmente.
 ## ⚙️ Alterações em Entidades
 
 ### User Entity
+
 - Campo `password` agora é **nullable** (`nullable: true`)
 - Usuarios do Google não possuem senha
 
@@ -138,10 +144,8 @@ passport-google-oauth20: Estratégia OAuth 2.0 do Google
 
 1. **Adicionar Refresh Token do Google**
    - Salvar `refreshToken` na BD para renovar acesso
-   
 2. **Logout com Google**
    - Revogar token de acesso do Google
-   
 3. **Vinculação de Contas**
    - Permitir usuário vincular Google com conta local existente
 
@@ -151,13 +155,16 @@ passport-google-oauth20: Estratégia OAuth 2.0 do Google
 ## ❓ Troubleshooting
 
 ### "Invalid client id"
+
 - Verifique se o `GOOGLE_CLIENT_ID` está correto
 - Confirme que a aplicação está registrada no Google Cloud Console
 
 ### "Redirect URI mismatch"
+
 - As URIs no Google Cloud Console devem corresponder exatamente às do `.env`
 - Inclua protocolo (http/https) e porta
 
 ### "Email não encontrado"
+
 - O usuário pode ter negado acesso ao email
 - Verifique os escopos solicitados em `google.strategy.ts`

@@ -17,6 +17,7 @@ export class UserService {
       where: {
         email: email,
       },
+      relations: ['workoutPlans', 'diet', 'userWorkoutSessions'],
     });
   }
 
@@ -29,6 +30,7 @@ export class UserService {
       where: {
         id,
       },
+      relations: ['workoutPlans', 'diet', 'userWorkoutSessions'],
     });
 
     if (!user)
@@ -71,7 +73,7 @@ export class UserService {
     const newUser = {
       ...user,
       password: null,
-    } as any;
+    };
 
     return await this.userRepository.save(newUser);
   }
