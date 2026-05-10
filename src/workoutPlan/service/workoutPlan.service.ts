@@ -11,12 +11,15 @@ export class WorkoutPlanService {
   ) {}
 
   async findAll(): Promise<WorkoutPlan[]> {
-    return await this.workoutRepository.find();
+    return await this.workoutRepository.find({
+      relations: ['workoutDays'],
+    });
   }
 
   async findById(id: number): Promise<WorkoutPlan> {
     const WorkoutPlan = await this.workoutRepository.findOne({
       where: { id },
+      relations: ['workoutDays'],
     });
 
     if (!WorkoutPlan) {
@@ -34,6 +37,7 @@ export class WorkoutPlanService {
       where: {
         name: ILike(`%${name}%`),
       },
+      relations: ['workoutDays'],
     });
   }
 

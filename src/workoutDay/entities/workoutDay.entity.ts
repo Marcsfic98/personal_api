@@ -11,10 +11,14 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
     ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
+import { UserWorkoutSession } from '../../userWorkoutSession/entities/userWorkoutSession.entity';
+import { WorkoutExercice } from '../../workoutExercice/entities/workoutExercice.entity';
 import { WorkoutPlan } from '../../workoutPlan/entities/workoutPlan.entity';
 
 export enum WeekDay {
@@ -61,8 +65,26 @@ export class WorkoutDay {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
+  @Column({ nullable: true })
+  workoutPlanId: number; // Esta coluna receberá o "2" do seu JSON
+
   @ManyToOne(() => WorkoutPlan, (workoutPlan) => workoutPlan.workoutDays, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'workoutPlanId' }) // Vincula o objeto à coluna de ID
   workoutPlan: WorkoutPlan;
+
+  @OneToMany(
+    () => WorkoutExercice,
+    (WorkoutExercice) => WorkoutExercice.workoutDay,
+    { cascade: true },
+  )
+  WorkoutExercice: WorkoutExercice[];
+
+  @OneToMany(
+    () => UserWorkoutSession,
+    (userWorkoutSession) => userWorkoutSession.workoutDay,
+    { cascade: true },
+  )
+  userWorkoutSessions: UserWorkoutSession[];
 }

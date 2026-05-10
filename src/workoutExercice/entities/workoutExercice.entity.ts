@@ -3,9 +3,13 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
+    ManyToOne,
     PrimaryGeneratedColumn,
-    UpdateDateColumn,
+    UpdateDateColumn
 } from 'typeorm';
+
+import { WorkoutDay } from '../../workoutDay/entities/workoutDay.entity';
 
 @Entity('workout_exercices')
 export class WorkoutExercice {
@@ -35,4 +39,13 @@ export class WorkoutExercice {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @Column({ nullable: true })
+  workoutDayId: number; // Esta coluna receberá o "2" do seu JSON
+
+  @ManyToOne(() => WorkoutDay, (workoutDay) => workoutDay.WorkoutExercice, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'workoutDayId' }) // Vincula o objeto à coluna de ID
+  workoutDay: WorkoutDay;
 }

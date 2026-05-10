@@ -8,5 +8,6 @@ import { WorkoutPlanService } from './service/workoutPlan.service';
   imports: [TypeOrmModule.forFeature([WorkoutPlan])],
   providers: [WorkoutPlanService],
   controllers: [WorkoutPlanController],
+  exports: [WorkoutPlanService],
 })
 export class WorkoutPlanModule {}
