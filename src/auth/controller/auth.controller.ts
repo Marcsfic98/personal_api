@@ -1,38 +1,30 @@
-import { AuthService } from './../service/auth.service';
-import { User } from './../../user/entities/user.entity';
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
-import { LocalAuthGuard } from '../guard/local-auth.guard';
+import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import type { Request, Response } from 'express';
 import { GoogleOAuthGuard } from '../guard/google-oauth.guard';
+import { LocalAuthGuard } from '../guard/local-auth.guard';
+import { AuthService } from '../service/auth.service';
 
-@Controller('/users')
+@Controller('users')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Post('auth/login')
   @UseGuards(LocalAuthGuard)
-  @HttpCode(HttpStatus.OK)
-  @Post('/login')
-  login(@Body() user: User): Promise<any> {
-    return this.authService.login(user);
+  async login(@Req() req: Request) {
+    return this.authService.login(req.user);
   }
 
-  @Get('/auth/google')
+  @Get('auth/google')
   @UseGuards(GoogleOAuthGuard)
-  async googleAuth(@Req() req: any) {
-    // Esta rota inicia o fluxo de autenticação do Google
+  async googleAuth(@Req() req: Request) {
+    // Inicia o fluxo de autenticação com Google
   }
 
-  @Get('/auth/google/callback')
+  @Get('auth/google/callback')
   @UseGuards(GoogleOAuthGuard)
-  async googleAuthRedirect(@Req() req: any) {
-    return this.authService.googleLogin(req.user);
+  async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
+    const result = await this.authService.googleLogin(req.user);
+    const token = result.token;
+    return res.redirect(`http://localhost:5173/callback?token=${token}`);
   }
 }

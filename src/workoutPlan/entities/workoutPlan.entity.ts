@@ -1,15 +1,16 @@
-import { ManyToOne } from 'typeorm';
-import { User } from './../../user/entities/user.entity';
+import { Exclude } from 'class-transformer';
 import { IsBoolean, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
+    Column,
+    CreateDateColumn,
+    Entity,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from 'typeorm';
 import { WorkoutDay } from '../../workoutDay/entities/workoutDay.entity';
+import { User } from './../../user/entities/user.entity';
 
 @Entity({ name: 'workout_plans' })
 export class WorkoutPlan {
@@ -37,6 +38,7 @@ export class WorkoutPlan {
   })
   workoutDays: WorkoutDay[];
 
+  @Exclude({ toPlainOnly: true })
   @ManyToOne(() => User, (user) => user.workoutPlans)
   user: User;
 }

@@ -1,15 +1,15 @@
-import { UserWorkoutSession } from './../../userWorkoutSession/entities/userWorkoutSession.entity';
-import { Diet } from './../../diet/entities/diet.entity';
-import { WorkoutPlan } from './../../workoutPlan/entities/workoutPlan.entity';
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
 import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
+    Column,
+    CreateDateColumn,
+    Entity,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from 'typeorm';
-import { OneToMany } from 'typeorm';
+import { Diet } from './../../diet/entities/diet.entity';
+import { UserWorkoutSession } from './../../userWorkoutSession/entities/userWorkoutSession.entity';
+import { WorkoutPlan } from './../../workoutPlan/entities/workoutPlan.entity';
 
 @Entity({ name: 'users' })
 export class User {
