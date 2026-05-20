@@ -22,10 +22,6 @@ export class Diet {
   @Column({ type: 'varchar', length: 100 })
   name: string;
 
-  @IsString()
-  @Column({ type: 'text', nullable: true })
-  description: string;
-
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
 

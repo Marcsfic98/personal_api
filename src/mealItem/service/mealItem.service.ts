@@ -11,12 +11,15 @@ export class MealItemService {
   ) {}
 
   async findAll(): Promise<MealItem[]> {
-    return await this.workoutRepository.find();
+    return await this.workoutRepository.find({
+      relations: ['meal'],
+    });
   }
 
   async findById(id: number): Promise<MealItem> {
     const MealItem = await this.workoutRepository.findOne({
       where: { id },
+      relations: ['meal'],
     });
 
     if (!MealItem) {
@@ -31,6 +34,7 @@ export class MealItemService {
       where: {
         name: ILike(`%${name}%`),
       },
+      relations: ['meal'],
     });
   }
 

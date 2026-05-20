@@ -11,12 +11,15 @@ export class MealService {
   ) {}
 
   async findAll(): Promise<Meal[]> {
-    return await this.mealRepository.find();
+    return await this.mealRepository.find({
+      relations: ['diet', 'items'],
+    });
   }
 
   async findById(id: number): Promise<Meal> {
     const meal = await this.mealRepository.findOne({
       where: { id },
+      relations: ['diet', 'items'],
     });
     if (!meal) {
       throw new Error('Meal not found');
@@ -29,6 +32,7 @@ export class MealService {
       where: {
         name: ILike(`%${name}%`),
       },
+      relations: ['diet', 'items'],
     });
   }
 
