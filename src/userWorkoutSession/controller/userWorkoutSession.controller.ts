@@ -19,6 +19,15 @@ export class UserWorkoutSessionController {
     private readonly UserWorkoutSessionService: UserWorkoutSessionService,
   ) {}
 
+  // NOVA ROTA: Busca o mapa de consistência focado no id do usuário
+  @Get('/consistency/:userId')
+  @HttpCode(HttpStatus.OK)
+  async getConsistencyMap(
+    @Param('userId', ParseIntPipe) userId: number,
+  ): Promise<Record<string, 'started' | 'completed' | 'not_started'>> {
+    return await this.UserWorkoutSessionService.getConsistencyMap(userId);
+  }
+
   @Get()
   @HttpCode(HttpStatus.OK)
   async findAll() {
