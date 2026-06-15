@@ -22,7 +22,15 @@ export class UserService {
   }
 
   async findAll(): Promise<User[]> {
-    return await this.userRepository.find({});
+    return await this.userRepository.find({
+      relations: [
+        'workoutPlans',
+        'diet',
+        'userWorkoutSessions',
+        'workoutPlans.workoutDays',
+        'workoutPlans.workoutDays.WorkoutExercice',
+      ],
+    });
   }
 
   async findById(id: number): Promise<User> {

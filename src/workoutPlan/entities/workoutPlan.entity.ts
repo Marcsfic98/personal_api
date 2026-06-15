@@ -27,6 +27,12 @@ export class WorkoutPlan {
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
 
+  @Column({ type: 'timestamp', nullable: true, name: 'expires_at' })
+  expiresAt: Date;
+
+  @Column({ type: 'timestamp', nullable: true, name: 'activated_at' })
+  activatedAt: Date;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

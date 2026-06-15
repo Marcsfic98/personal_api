@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { DietModule } from './diet/diet.module';
@@ -8,6 +9,7 @@ import { Meal } from './meal/entities/meal.entity';
 import { MealModule } from './meal/meal.module';
 import { MealItem } from './mealItem/entities/mealItem.entity';
 import { MealItemModule } from './mealItem/mealItem.module';
+import { PaymentModule } from './payment/payment.module';
 import { User } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
 import { UserWorkoutSession } from './userWorkoutSession/entities/userWorkoutSession.entity';
@@ -21,6 +23,8 @@ import { WorkoutPlanModule } from './workoutPlan/workoutPlan.module';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
+    PaymentModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -54,6 +58,7 @@ import { WorkoutPlanModule } from './workoutPlan/workoutPlan.module';
     MealItemModule,
     AuthModule,
     UserModule,
+    PaymentModule,
   ],
   controllers: [],
   providers: [],
