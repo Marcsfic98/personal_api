@@ -38,7 +38,15 @@ export class UserService {
       where: {
         id,
       },
-      relations: ['workoutPlans', 'diet', 'userWorkoutSessions'],
+      relations: [
+        'workoutPlans',
+        'diet',
+        'diet.meals',
+        'diet.meals.items',
+        'userWorkoutSessions',
+        'workoutPlans.workoutDays',
+        'workoutPlans.workoutDays.WorkoutExercice',
+      ],
     });
 
     if (!user)

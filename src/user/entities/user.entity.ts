@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, MinLength } from 'class-validator';
 import {
     Column,
     CreateDateColumn,
@@ -10,6 +10,11 @@ import {
 import { Diet } from './../../diet/entities/diet.entity';
 import { UserWorkoutSession } from './../../userWorkoutSession/entities/userWorkoutSession.entity';
 import { WorkoutPlan } from './../../workoutPlan/entities/workoutPlan.entity';
+
+export enum UserRole {
+  USER = 'user',
+  ADMIN = 'admin',
+}
 
 @Entity({ name: 'users' })
 export class User {
@@ -36,6 +41,14 @@ export class User {
 
   @Column({ length: 5000 })
   image: string;
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.USER,
+  })
+  @IsEnum(UserRole)
+  role: UserRole;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
