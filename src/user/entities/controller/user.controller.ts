@@ -1,15 +1,15 @@
-import { UserService } from './../../service/user.service';
 import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  ParseIntPipe,
-  Post,
-  Put,
+    Body,
+    Controller,
+    Get,
+    HttpCode,
+    HttpStatus,
+    Param,
+    ParseIntPipe,
+    Post,
+    Put,
 } from '@nestjs/common';
+import { UserService } from './../../service/user.service';
 
 import { User } from '../user.entity';
 
@@ -35,9 +35,10 @@ export class UserController {
     return this.userService.create(user);
   }
 
+  // 💡 AJUSTADO: Agora aceita propriedades parciais do Usuário
   @Put('/update')
   @HttpCode(HttpStatus.OK)
-  async update(@Body() user: User): Promise<User> {
-    return this.userService.update(user);
+  async update(@Body() user: Partial<User>): Promise<User> {
+    return this.userService.update(user as User);
   }
 }

@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     Body,
     Controller,
     Headers,
@@ -7,22 +8,16 @@ import {
     Req,
     Res,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import { PaymentService } from '../service/payment.service';
-
-// 🚀 CORREÇÃO AQUI: Importa usando o padrão de namespace (import * as)
-import * as express from 'express';
 
 @Controller('payments')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Post('create-checkout')
-  async createCheckout(
-    @Body() body: any, // Captura o body inteiro temporariamente
-  ) {
-    // 🚀 Dê esse log para ver o que o React está de fato entregando
-    console.log('DADOS VINDOS DO FRONT-END:', body);
-
+  async createCheckout(@Body() body: any) {
+    console.log('📦 DADOS VINDOS DO FRONT-END:', body);
     return await this.paymentService.createCheckoutSession(
       body.userId,
       body.userEmail,
@@ -32,30 +27,60 @@ export class PaymentController {
 
   @Post('webhook')
   async stripeWebhook(
-    // 🚀 CORREÇÃO AQUI: Passa a tipagem através do objeto express
-    @Req() req: express.Request,
+    @Req() req: Request,
     @Headers('stripe-signature') signature: string,
-    @Res() res: express.Response,
+    @Res() res: Response,
   ) {
-    const event = req.body;
+    if (!signature) {
+      throw new BadRequestException('Faltando o cabeçalho stripe-signature');
+    }
 
     try {
+      // 🚀 Captura o buffer bruto disponibilizado pelo NestJS
+      const rawBody = (req as any).rawBody;
+
+      if (!rawBody) {
+        console.error('❌ Erro: rawBody não foi populado. Verifique o main.ts');
+        throw new BadRequestException('Não foi possível ler o Raw Body.');
+      }
+
+      const event = this.paymentService.constructStripeEvent(
+        rawBody,
+        signature,
+      );
+
+      console.log(`⚡ Evento recebido do Stripe: ${event.type}`);
+
       if (event.type === 'checkout.session.completed') {
-        const session = event.data.object;
+        const session = event.data.object as any;
 
         const userEmail = session.customer_details?.email;
         const priceId = session.metadata?.priceId;
 
+        console.log(
+          `💰 Checkout completo detectado para o e-mail: ${userEmail}`,
+        );
+
         if (userEmail && priceId) {
-          await this.paymentService.handleSuccessfulSubscription(
-            userEmail,
-            priceId,
+          const resultado =
+            await this.paymentService.handleSuccessfulSubscription(
+              userEmail,
+              priceId,
+            );
+          console.log('✅ PLANO SALVO COM SUCESSO NO BANCO:', resultado);
+        } else {
+          console.warn(
+            '⚠️ Webhook ignorado: Faltando userEmail ou priceId nos metadados',
           );
         }
       }
 
+      // Retorna 200 para o Stripe saber que o evento foi processado
       return res.status(HttpStatus.OK).json({ received: true });
     } catch (err) {
+      console.error(
+        `❌ Erro de validação/processamento no Webhook: ${err.message}`,
+      );
       return res
         .status(HttpStatus.BAD_REQUEST)
         .send(`Webhook Error: ${err.message}`);

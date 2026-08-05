@@ -39,8 +39,23 @@ export class User {
   @Column({ length: 255, nullable: true })
   password: string;
 
-  @Column({ length: 5000 })
+  @Column({ length: 5000, nullable: true })
   image: string;
+
+  @Column({ type: 'decimal', precision: 5, scale: 2, nullable: true })
+  weight: number;
+
+  @Column({ type: 'decimal', precision: 3, scale: 2, nullable: true })
+  height: number;
+
+  @Column({ type: 'decimal', precision: 4, scale: 2, nullable: true })
+  imc: number | null;
+
+  @Column({ nullable: true })
+  age: number;
+
+  @Column({ length: 255, nullable: true })
+  goal: string;
 
   @Column({
     type: 'enum',

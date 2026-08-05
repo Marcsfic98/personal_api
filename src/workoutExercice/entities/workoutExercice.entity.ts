@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 import {
     Column,
     CreateDateColumn,
@@ -6,7 +6,7 @@ import {
     JoinColumn,
     ManyToOne,
     PrimaryGeneratedColumn,
-    UpdateDateColumn
+    UpdateDateColumn,
 } from 'typeorm';
 
 import { WorkoutDay } from '../../workoutDay/entities/workoutDay.entity';
@@ -33,6 +33,12 @@ export class WorkoutExercice {
 
   @Column({ type: 'int' })
   restTime: number;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(255)
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  observation: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

@@ -12,11 +12,20 @@ export class UserService {
     private bcrypt: Bcrypt,
   ) {}
 
+  private calculateImc(
+    weight: number | null,
+    height: number | null,
+  ): number | null {
+    if (!weight || !height || height <= 0) {
+      return null;
+    }
+    const imc = weight / (height * height);
+    return parseFloat(imc.toFixed(2));
+  }
+
   async findByEmail(email: string): Promise<User | null> {
     return await this.userRepository.findOne({
-      where: {
-        email: email,
-      },
+      where: { email: email },
       relations: ['workoutPlans', 'diet', 'userWorkoutSessions'],
     });
   }
@@ -35,9 +44,7 @@ export class UserService {
 
   async findById(id: number): Promise<User> {
     const user = await this.userRepository.findOne({
-      where: {
-        id,
-      },
+      where: { id },
       relations: [
         'workoutPlans',
         'diet',
@@ -52,6 +59,8 @@ export class UserService {
     if (!user)
       throw new HttpException('usuario não encontrado!', HttpStatus.NOT_FOUND);
 
+    user.imc = this.calculateImc(user.weight, user.height);
+
     return user;
   }
 
@@ -61,23 +70,32 @@ export class UserService {
     if (finduser)
       throw new HttpException('O usuario já existe!', HttpStatus.BAD_REQUEST);
 
+    user.imc = this.calculateImc(user.weight, user.height);
     user.password = await this.bcrypt.encryptPassword(user.password);
     return await this.userRepository.save(user);
   }
 
+  // 💡 ATUALIZADO: Faz o merge parcial apenas dos campos antropométricos enviados
   async update(user: User): Promise<User> {
-    await this.findById(user.id);
+    // 1. Busca o utilizador atual completo do banco de dados
+    const existingUser = await this.findById(user.id);
 
-    const finduser = await this.findByEmail(user.email);
+    // 2. Substitui apenas as propriedades que vieram na requisição
+    existingUser.weight =
+      user.weight !== undefined ? user.weight : existingUser.weight;
+    existingUser.height =
+      user.height !== undefined ? user.height : existingUser.height;
+    existingUser.age = user.age !== undefined ? user.age : existingUser.age;
+    existingUser.goal = user.goal !== undefined ? user.goal : existingUser.goal;
 
-    if (finduser && finduser.id !== user.id)
-      throw new HttpException(
-        'Usuário (e-mail) já Cadastrado!',
-        HttpStatus.BAD_REQUEST,
-      );
+    // 3. Recalcula o IMC dinamicamente com base nos dados consolidados
+    existingUser.imc = this.calculateImc(
+      existingUser.weight,
+      existingUser.height,
+    );
 
-    user.password = await this.bcrypt.encryptPassword(user.password);
-    return await this.userRepository.save(user);
+    // 4. Salva a entidade existente (nome, e-mail e password permanecem intocados)
+    return await this.userRepository.save(existingUser);
   }
 
   async createGoogleUser(user: any): Promise<User> {
@@ -88,6 +106,7 @@ export class UserService {
 
     const newUser = {
       ...user,
+      imc: this.calculateImc(user.weight, user.height),
       password: null,
     };
 

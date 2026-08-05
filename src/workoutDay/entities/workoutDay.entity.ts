@@ -3,9 +3,10 @@ import {
     IsEnum,
     IsInt,
     IsNotEmpty,
+    IsOptional,
     IsString,
     MaxLength,
-    Min,
+    Min
 } from 'class-validator';
 import {
     Column,
@@ -45,6 +46,11 @@ export class WorkoutDay {
   @IsBoolean()
   @Column({ type: 'boolean', default: true })
   isRest: boolean;
+
+  @IsString()
+  @IsOptional()
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  observation: string;
 
   @IsEnum(WeekDay, { message: 'Dia da semana inválido' })
   @Column({
