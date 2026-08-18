@@ -10,7 +10,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Personal API')
-    .setDescription('Documentação das rotas e serviços da aplicação Personal API')
+    .setDescription(
+      'Documentação das rotas e serviços da aplicação Personal API',
+    )
     .setVersion('1.0')
     .addBearerAuth()
     .build();
@@ -19,6 +21,9 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document, {
     swaggerOptions: {
       persistAuthorization: true,
+      defaultModelsExpandDepth: 3,
+      defaultModelExpandDepth: 3,
+      docExpansion: 'list',
     },
   });
 
